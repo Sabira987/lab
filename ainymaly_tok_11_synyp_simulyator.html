@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зертханалық жұмыс: Айнымалы ток — 11-сынып</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#64748b;--line:#dbe3ee;--blue:#2563eb;--orange:#d97706;--teal:#0d9488;--purple:#7c3aed}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#12264a,#2456a6);color:white;padding:28px 18px}
+header .wrap,main{max-width:1100px;margin:auto}h1{font-size:clamp(1.55rem,4vw,2.35rem);line-height:1.2;margin:0 0 10px}header p{margin:0;color:#e2eaff}
+main{padding:22px 16px 48px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 4px 14px #0f172a08;margin-bottom:16px}
+h2{font-size:1.18rem;margin:0 0 14px}h3{font-size:1rem;margin:0 0 8px}.muted,.hint{color:var(--muted)}.hint{font-size:.9rem}
+.control{margin:16px 0}.control label{display:flex;justify-content:space-between;gap:12px;font-weight:650;margin-bottom:8px}.control output{color:var(--blue);white-space:nowrap}
+input[type=range]{width:100%;accent-color:var(--blue)}.ends{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--line);border-radius:13px;padding:14px}.metric .name{font-size:.85rem;color:var(--muted)}.metric strong{display:block;font-size:1.55rem;margin:3px 0}.orange{color:var(--orange)}.blue{color:var(--blue)}.teal{color:var(--teal)}.purple{color:var(--purple)}
+canvas{display:block;width:100%;height:260px;border:1px solid var(--line);border-radius:12px;background:#fff}
+button{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:650;cursor:pointer;background:var(--blue);color:#fff}button.secondary{background:#e8eef8;color:#19325e}button.danger{background:#fff0f0;color:#a12626}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{background:#f3f6fb} .tablewrap{overflow:auto}
+.task{padding:12px 0;border-bottom:1px solid var(--line)}.task:last-child{border:0}.q{margin:16px 0}.q p{font-weight:650;margin:0 0 8px}.q label{display:block;margin:7px 0;font-weight:400}.result{border-radius:12px;padding:13px;background:#eff6ff;margin-top:12px}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.card{padding:16px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}canvas{height:220px}}
+@media print{body{background:white}.card{box-shadow:none;break-inside:avoid}button,input{display:none}header{background:#fff;color:#111;padding:10px 0}header p{color:#333}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Виртуалды зертхана: Айнымалы ток</h1>
+<p>Физика • 11-сынып • Үйде оқитын оқушыға арналған интерактивті зертханалық жұмыс</p>
+</div></header>
+<main>
+<section class="card">
+<h2>Зертханалық жұмыстың мақсаты</h2>
+<p>Айнымалы токтың негізгі шамаларын зерттеу; кернеу амплитудасы, жиілік және кедергі өзгергенде әсерлік кернеудің, ток күшінің, периодтың және қуаттың қалай өзгеретінін бақылау.</p>
+<p><b>Құралдар:</b> виртуалды айнымалы кернеу көзі, резистор және осциллограф. <b>Қауіпсіздік:</b> бұл — компьютерлік модель; нақты электр желісіне тәжірибе құрылғыларын қоспаңыз.</p>
+</section>
+<div class="grid">
+<section class="card">
+<h2>1. Тәжірибе параметрлері</h2>
+<div class="control"><label for="amp">Кернеу амплитудасы, Uₘₐₓ <output id="ampOut">100 В</output></label><input id="amp" type="range" min="10" max="220" step="10" value="100"><div class="ends"><span>10 В</span><span>220 В</span></div></div>
+<div class="control"><label for="freq">Жиілік, f <output id="freqOut">50 Гц</output></label><input id="freq" type="range" min="1" max="100" step="1" value="50"><div class="ends"><span>1 Гц</span><span>100 Гц</span></div></div>
+<div class="control"><label for="res">Кедергі, R <output id="resOut">50 Ом</output></label><input id="res" type="range" min="10" max="200" step="10" value="50"><div class="ends"><span>10 Ом</span><span>200 Ом</span></div></div>
+<div class="actions"><button id="reset" class="secondary">Бастапқы мәндер</button></div>
+<p class="hint">Параметрлерді өзгерткен сайын өлшеу нәтижелері автоматты түрде есептеледі.</p>
+</section>
+<section class="card">
+<h2>2. Өлшеу құралдары</h2>
+<div class="metrics">
+<div class="metric"><span class="name">Әсерлік кернеу U</span><strong class="orange" id="uRms">70.71 В</strong><span class="hint">U = Uₘₐₓ / √2</span></div>
+<div class="metric"><span class="name">Период T</span><strong class="blue" id="period">0.0200 с</strong><span class="hint">T = 1 / f</span></div>
+<div class="metric"><span class="name">Әсерлік ток I</span><strong class="teal" id="iRms">1.414 А</strong><span class="hint">I = U / R</span></div>
+<div class="metric"><span class="name">Орташа қуат P</span><strong class="purple" id="power">100.00 Вт</strong><span class="hint">P = U² / R</span></div>
+</div>
+</section>
+</div>
+<section class="card">
+<h2>3. Осциллограф: кернеудің уақытқа тәуелділігі</h2>
+<canvas id="chart" width="1000" height="360" aria-label="Айнымалы кернеудің синусоидалы графигі"></canvas>
+<p class="hint">Сары сызық — кернеу. Көлденең осьте екі период көрсетіледі. График параметрлер өзгергенде жаңарады.</p>
+</section>
+<section class="card">
+<h2>4. Зерттеу тапсырмалары</h2>
+<div class="task"><h3>Тәжірибе 1. Кернеу амплитудасының әсері</h3><p>Жиілік пен кедергіні тұрақты ұстаңыз. Uₘₐₓ мәнін өзгертіңіз. Әсерлік кернеу мен ток күшінің өзгерісін бақылап, кестеге кемінде екі нәтиже енгізіңіз.</p></div>
+<div class="task"><h3>Тәжірибе 2. Жиіліктің әсері</h3><p>Амплитуда мен кедергіні тұрақты ұстаңыз. Жиілікті өзгертіңіз. Период қалай өзгеретінін анықтаңыз. Идеал резистор үшін осы модельде токтың әсерлік мәні жиілікке тәуелді ме?</p></div>
+<div class="task"><h3>Тәжірибе 3. Кедергінің әсері</h3><p>Амплитуда мен жиілікті тұрақты ұстаңыз. Кедергіні өзгертіңіз. Ток күші мен орташа қуаттың өзгерісін салыстырыңыз.</p></div>
+<div class="actions"><button id="save">Ағымдағы нәтижені кестеге қосу</button><button id="csv" class="secondary">CSV кестесін жүктеу</button><button id="print" class="secondary">Басып шығару / PDF</button></div>
+<div class="tablewrap" style="margin-top:14px"><table><thead><tr><th>№</th><th>Uₘₐₓ (В)</th><th>f (Гц)</th><th>R (Ом)</th><th>U (В)</th><th>T (с)</th><th>I (А)</th><th>P (Вт)</th></tr></thead><tbody id="rows"><tr><td colspan="8" class="muted">Әзірге нәтиже жоқ. Жоғарыдағы батырманы басыңыз.</td></tr></tbody></table></div>
+<div class="actions"><button id="clear" class="danger">Кестені тазалау</button></div>
+</section>
+<section class="card">
+<h2>5. Бақылау сұрақтары</h2>
+<div class="q"><p>1. Айнымалы токтың периоды мен жиілігінің байланысы қандай?</p>
+<label><input type="radio" name="q1" value="a"> T = f</label><label><input type="radio" name="q1" value="b"> T = 1/f</label><label><input type="radio" name="q1" value="c"> T = U/R</label></div>
+<div class="q"><p>2. Синусоидалы кернеудің әсерлік мәні неге тең?</p>
+<label><input type="radio" name="q2" value="a"> U = Uₘₐₓ√2</label><label><input type="radio" name="q2" value="b"> U = Uₘₐₓ/2</label><label><input type="radio" name="q2" value="c"> U = Uₘₐₓ/√2</label></div>
+<div class="q"><p>3. Кернеу тұрақты болғанда кедергі артса, ток күші қалай өзгереді?</p>
+<label><input type="radio" name="q3" value="a"> Артады</label><label><input type="radio" name="q3" value="b"> Өзгермейді</label><label><input type="radio" name="q3" value="c"> Азаяды</label></div>
+<button id="check">Жауаптарды тексеру</button><div id="quizResult" class="result" hidden></div>
+</section>
+<section class="card">
+<h2>6. Қорытындыны толтырыңыз</h2>
+<p>Тәжірибе нәтижесіне сүйеніп, төмендегі сөйлемдерді аяқтаңыз. Жауапты мұғалімге көрсетуге немесе басып шығаруға болады.</p>
+<label for="conclusion"><b>Қорытынды:</b></label><textarea id="conclusion" rows="5" style="width:100%;margin-top:8px;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit" placeholder="Мысалы: амплитуда артқанда әсерлік кернеу ..."></textarea>
+</section>
+<section class="card"><h2>Формулалар</h2>
+<p>Лездік кернеу: <b>u(t) = Uₘₐₓ sin(2πft)</b></p>
+<p>Әсерлік кернеу: <b>U = Uₘₐₓ / √2</b></p>
+<p>Период пен жиілік: <b>T = 1/f</b></p>
+<p>Ом заңы: <b>I = U/R</b></p>
+<p>Резистордағы орташа қуат: <b>P = U²/R</b></p>
+<p class="hint">Ескерту: модель идеал резисторға арналған. Индуктивтік және сыйымдылық кедергілер, фазалық ығысу ескерілмейді.</p></section>
+</main>
+<footer>11-сынып физикасы • Айнымалы ток • Офлайн жұмыс істейтін оқу симуляторы</footer>
+<script>
+const $=id=>document.getElementById(id);
+let records=[];
+function values(){const vmax=+$('amp').value,f=+$('freq').value,R=+$('res').value,U=vmax/Math.sqrt(2),T=1/f,I=U/R,P=U*U/R;return {vmax,f,R,U,T,I,P};}
+function fmt(n,d=2){return n.toFixed(d);}
+function draw(){
+ const v=values(),c=$('chart'),ctx=c.getContext('2d'),w=c.width,h=c.height;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+ const left=66,right=24,top=26,bottom=42,pw=w-left-right,ph=h-top-bottom,mid=top+ph/2,amp=ph*.40;
+ ctx.strokeStyle='#e4eaf2';ctx.lineWidth=1;
+ for(let i=0;i<=8;i++){let x=left+pw*i/8;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,top+ph);ctx.stroke();}
+ for(let i=0;i<=4;i++){let y=top+ph*i/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(left+pw,y);ctx.stroke();}
+ ctx.strokeStyle='#718096';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(left,mid);ctx.lineTo(left+pw,mid);ctx.stroke();
+ ctx.fillStyle='#344054';ctx.font='16px system-ui';ctx.fillText('u (В)',12,20);ctx.fillText('Уақыт (екі период)',w/2-78,h-10);
+ ctx.font='13px system-ui';ctx.fillText('+'+v.vmax+' В',8,top+5);ctx.fillText('0',42,mid+5);ctx.fillText('−'+v.vmax+' В',4,top+ph);
+ ctx.strokeStyle='#d97706';ctx.lineWidth=3;ctx.beginPath();
+ for(let i=0;i<=500;i++){let x=left+pw*i/500,y=mid-amp*Math.sin(4*Math.PI*i/500);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();
+}
+function update(){const v=values();$('ampOut').textContent=v.vmax+' В';$('freqOut').textContent=v.f+' Гц';$('resOut').textContent=v.R+' Ом';$('uRms').textContent=fmt(v.U)+' В';$('period').textContent=fmt(v.T,4)+' с';$('iRms').textContent=fmt(v.I,3)+' А';$('power').textContent=fmt(v.P)+' Вт';draw();}
+function renderRows(){const body=$('rows');if(!records.length){body.innerHTML='<tr><td colspan="8" class="muted">Әзірге нәтиже жоқ. Жоғарыдағы батырманы басыңыз.</td></tr>';return;}body.innerHTML=records.map((r,i)=>`<tr><td>${i+1}</td><td>${r.vmax}</td><td>${r.f}</td><td>${r.R}</td><td>${fmt(r.U)}</td><td>${fmt(r.T,4)}</td><td>${fmt(r.I,3)}</td><td>${fmt(r.P)}</td></tr>`).join('');}
+['amp','freq','res'].forEach(id=>$(id).addEventListener('input',update));
+$('reset').addEventListener('click',()=>{$('amp').value=100;$('freq').value=50;$('res').value=50;update();});
+$('save').addEventListener('click',()=>{records.push(values());renderRows();});
+$('clear').addEventListener('click',()=>{records=[];renderRows();});
+$('csv').addEventListener('click',()=>{if(!records.length){alert('Алдымен кестеге нәтиже қосыңыз.');return;}const lines=[['№','Umax (В)','f (Гц)','R (Ом)','U (В)','T (с)','I (А)','P (Вт)'],...records.map((r,i)=>[i+1,r.vmax,r.f,r.R,fmt(r.U),fmt(r.T,4),fmt(r.I,3),fmt(r.P)])];const csv='\uFEFF'+lines.map(row=>row.join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ainymaly_tok_natizheleri.csv';a.click();URL.revokeObjectURL(a.href);});
+$('print').addEventListener('click',()=>window.print());
+$('check').addEventListener('click',()=>{const correct={q1:'b',q2:'c',q3:'c'};let score=0,html='';for(let i=1;i<=3;i++){const chosen=document.querySelector(`input[name="q${i}"]:checked`);if(chosen&&chosen.value===correct['q'+i])score++;}html=`<b>Нәтиже: ${score}/3</b><br>1. T = 1/f.<br>2. U = Uₘₐₓ/√2.<br>3. Кедергі артқанда ток күші азаяды.`;$('quizResult').innerHTML=html;$('quizResult').hidden=false;});
+update();
+</script>
+</body></html>
